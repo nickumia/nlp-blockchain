@@ -1,2 +1,2 @@
-Crypto
-hashlib
+-e .
+pycryptodome

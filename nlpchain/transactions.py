@@ -1,5 +1,8 @@
 
 import binascii
+import collections
+import datetime
+
 import Crypto
 import Crypto.Random
 from Crypto.Hash import SHA
@@ -36,7 +39,7 @@ class Transaction:
         return collections.OrderedDict({'sender': identity,
                                         'recipient': self.recipient,
                                         'value': self.value,
-                                        'time' : self.time})
+                                        'time': self.time})
 
     def sign_transaction(self):
         private_key = self.sender._private_key
