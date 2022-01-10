@@ -13,14 +13,20 @@ class Blockchain:
         self.unsettled_transactions = []
         self.nodes = set()
 
+        self.new_block(previous_hash='nlp')
+
     def register_node(self, node_ip):
         pass
 
-    def new_block(self, proof, previous_hash=None):
+    def new_block(self, proof=None, previous_hash=None):
+        for pending in self.unsettled_transactions:
+            verifier = Transaction('unknown', 'unknown', 0)
+            assert verifier.verify_transaction(pending['transaction'],
+                pending['signature'], pending['transaction']['sender'])
         block = {
             'index': len(self.chain) + 1,
             'timestamp': time(),
-            'transactions': self.pending_transactions,
+            'transactions': self.unsettled_transactions,
             'proof': proof,
             'previous_hash': previous_hash or self.hash(self.chain[-1]),
         }
@@ -39,8 +45,13 @@ class Blockchain:
         IN: v: value, int
         OUT: block index that transaction will be part of
         '''
-        self.pending_transactions.append(Transaction(s, r, v))
-        return self.last_block['index'] + 1
+        transaction = Transaction(s, r, v)
+        verified_transaction = {
+            'transaction': transaction.to_dict(),
+            'signature': transaction.sign_transaction()
+        }
+        self.unsettled_transactions.append(verified_transaction)
+        return self.newest_block()['index'] + 1
 
     @staticmethod
     def hash(block):

@@ -1,6 +1,5 @@
 
 import binascii
-import collections
 import datetime
 
 import Crypto
@@ -36,13 +35,23 @@ class Transaction:
         else:
             identity = self.sender.identity
 
-        return collections.OrderedDict({'sender': identity,
-                                        'recipient': self.recipient,
-                                        'value': self.value,
-                                        'time': self.time})
+        return {'sender': identity,
+                'recipient': self.recipient.identity,
+                'value': self.value,
+                'time': self.time}
 
     def sign_transaction(self):
         private_key = self.sender._private_key
         signer = PKCS1_v1_5.new(private_key)
         h = SHA.new(str(self.to_dict()).encode('utf8'))
         return binascii.hexlify(signer.sign(h)).decode('ascii')
+
+    @staticmethod
+    def verify_transaction(transaction, signature, public_key):
+        verifier = PKCS1_v1_5.new(RSA.importKey(binascii.unhexlify(public_key.encode('ascii'))))
+        # return RSA.importKey(binascii.unhexlify(public_key.encode('ascii')))
+        h = SHA.new(str(transaction).encode('utf8'))
+        print(h)
+        if verifier.verify(h, binascii.unhexlify(signature.encode('ascii'))):
+            return True
+        return False
