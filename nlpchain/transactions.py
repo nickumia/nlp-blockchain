@@ -1,6 +1,6 @@
 
 import binascii
-import datetime
+from time import time
 
 import Crypto
 import Crypto.Random
@@ -27,7 +27,7 @@ class Transaction:
         self.sender = sender
         self.recipient = recipient
         self.value = value
-        self.time = datetime.datetime.now()
+        self.time = time()
 
     def to_dict(self):
         if self.sender == "Genesis":
@@ -48,10 +48,11 @@ class Transaction:
 
     @staticmethod
     def verify_transaction(transaction, signature, public_key):
-        verifier = PKCS1_v1_5.new(RSA.importKey(binascii.unhexlify(public_key.encode('ascii'))))
-        # return RSA.importKey(binascii.unhexlify(public_key.encode('ascii')))
+        verifier = PKCS1_v1_5.new(
+            RSA.importKey(binascii.unhexlify(public_key.encode('ascii')))
+        )
         h = SHA.new(str(transaction).encode('utf8'))
-        print(h)
+
         if verifier.verify(h, binascii.unhexlify(signature.encode('ascii'))):
             return True
         return False

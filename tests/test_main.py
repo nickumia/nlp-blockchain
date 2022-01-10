@@ -27,4 +27,5 @@ def test_transaction():
     new_block = A.new_block()
     assert new_block['index'] == 2
     assert new_block['transactions'][0]['transaction']['sender'] == a.identity
-    assert new_block['transactions'][0]['transaction']['recipient'] == b.identity
+    assert new_block['transactions'][0]['transaction']['recipient'] == \
+        b.identity

@@ -21,8 +21,9 @@ class Blockchain:
     def new_block(self, proof=None, previous_hash=None):
         for pending in self.unsettled_transactions:
             verifier = Transaction('unknown', 'unknown', 0)
-            assert verifier.verify_transaction(pending['transaction'],
-                pending['signature'], pending['transaction']['sender'])
+            assert verifier.verify_transaction(
+                pending['transaction'], pending['signature'],
+                pending['transaction']['sender'])
         block = {
             'index': len(self.chain) + 1,
             'timestamp': time(),
