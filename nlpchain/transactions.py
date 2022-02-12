@@ -10,10 +10,9 @@ from Crypto.Signature import PKCS1_v1_5
 
 
 class Client:
-    def __init__(self, private_key=None, public_key=None):
+    def __init__(self, private_key=None):
         '''
         IN: private_key: binary format (PEM or DER)
-        IN: public_key: binary format (PEM or DER)
         '''
         random = Crypto.Random.new().read
         if private_key is None:
@@ -21,7 +20,7 @@ class Client:
             self._public_key = self._private_key.publickey()
         else:
             self._private_key = RSA.importKey(private_key)
-            self._public_key = RSA.importKey(public_key)
+            self._public_key = self._private_key.publickey()
 
         self._signer = PKCS1_v1_5.new(self._private_key)
         self._signer_public = PKCS1_v1_5.new(self._public_key)

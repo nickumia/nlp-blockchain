@@ -39,9 +39,8 @@ def test_importkey():
 
     key = RSA.generate(2048)
     prkey = key.export_key('PEM')
-    pukey = key.publickey().export_key('PEM')
 
-    a = Client(private_key=prkey, public_key=pukey)
+    a = Client(private_key=prkey)
 
     message = b'Test Message'
     message_hash = SHA256.new(message)
