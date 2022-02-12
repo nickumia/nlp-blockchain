@@ -2,6 +2,9 @@
 from nlpchain.nlp import Blockchain
 from nlpchain.transactions import Client
 
+from Crypto.PublicKey import RSA
+from Crypto.Hash import SHA256
+
 
 def test_blockchain_init():
     a = Blockchain()
@@ -29,3 +32,22 @@ def test_transaction():
     assert new_block['transactions'][0]['transaction']['sender'] == a.identity
     assert new_block['transactions'][0]['transaction']['recipient'] == \
         b.identity
+
+
+def test_importkey():
+    A = Blockchain()
+
+    key = RSA.generate(2048)
+    prkey = key.export_key('PEM')
+    pukey = key.publickey().export_key('PEM')
+
+    a = Client(private_key=prkey, public_key=pukey)
+
+    message = b'Test Message'
+    message_hash = SHA256.new(message)
+    signature = a._signer.sign(message_hash)
+
+    try:
+        a._signer_public.verify(message_hash, signature)
+    except (ValueError, TypeError):
+        print("The signature is not valid.")
