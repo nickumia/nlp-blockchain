@@ -37,10 +37,11 @@ def test_transaction():
 def test_importkey():
     A = Blockchain()
 
-    key = RSA.generate(2048)
-    prkey = key.export_key('PEM')
+    filepath = 'test.pem'
+    with open(filepath, 'wb') as outar:
+        outar.write(RSA.generate(2048).export_key('PEM'))
 
-    a = Client(private_key=prkey)
+    a = Client(private_key=filepath)
 
     message = b'Test Message'
     message_hash = SHA256.new(message)
