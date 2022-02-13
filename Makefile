@@ -6,3 +6,4 @@ lint:
 
 test:
 	docker run --rm -v "$(shell pwd)":/pac nlp-blockchain:dev bash -c "coverage run --source=nlpchain -m pytest --disable-pytest-warnings && coverage report --omit=\"tests/*\""
+	rm -f test.pem

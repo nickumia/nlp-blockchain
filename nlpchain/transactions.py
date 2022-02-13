@@ -16,7 +16,7 @@ class Client:
         '''
         random = Crypto.Random.new().read
         if private_key is None:
-            self._private_key = RSA.generate(1024, random)
+            self._private_key = RSA.generate(4096, random)
             self._public_key = self._private_key.publickey()
         else:
             self._private_key = RSA.importKey(open(private_key).read())
