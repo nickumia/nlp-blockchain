@@ -10,11 +10,20 @@ from Crypto.Signature import PKCS1_v1_5
 
 
 class Client:
-    def __init__(self):
+    def __init__(self, private_key=None):
+        '''
+        IN: private_key: filepath to key
+        '''
         random = Crypto.Random.new().read
-        self._private_key = RSA.generate(1024, random)
-        self._public_key = self._private_key.publickey()
+        if private_key is None:
+            self._private_key = RSA.generate(4096, random)
+            self._public_key = self._private_key.publickey()
+        else:
+            self._private_key = RSA.importKey(open(private_key).read())
+            self._public_key = self._private_key.publickey()
+
         self._signer = PKCS1_v1_5.new(self._private_key)
+        self._signer_public = PKCS1_v1_5.new(self._public_key)
 
     @property
     def identity(self):
