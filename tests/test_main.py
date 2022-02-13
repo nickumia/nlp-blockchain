@@ -35,8 +35,6 @@ def test_transaction():
 
 
 def test_importkey():
-    A = Blockchain()
-
     filepath = 'test.pem'
     with open(filepath, 'wb') as outar:
         outar.write(RSA.generate(2048).export_key('PEM'))
